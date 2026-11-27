@@ -2,129 +2,488 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/*
+ * Laundry Hub tokens. Colours and type come from the "Laundry Hub" design
+ * system (project/tokens.json, v2, Coastal Breeze). Shape follows the landing
+ * redesign of 27 Nov 2026: soft rounded cards, pill controls, a floral sheet
+ * inset on a cool grey page, colour photography. Archivo only.
+ *
+ * `.dark` is never applied: the system has one theme. The variant is kept so
+ * shadcn's `dark:` classes stay inert instead of following the OS setting.
+ */
 @custom-variant dark (&:is(.dark *));
 
+/* ---------- Brand tokens (names match tokens.json) ---------- */
+:root {
+  /* Core palette */
+  --lh-bg: #fffaf0; /* Floral White: page ground */
+  --lh-surface: #edf3f8; /* raised panels, input fill, dialog body */
+  --lh-text: #152837; /* harbour navy: text, rules, focus, dark ground */
+  --lh-accent: #87ceeb; /* Sky Blue: primary fill, logo tile, banner. Text on it is always navy */
+  --lh-steel: #4682b4; /* display type 24px+, numerals, active marker. Never small text */
+  --lh-control-border: #708090; /* Slate Gray: input, chip and stepper edges */
+  --lh-divider: #15283726; /* hairlines between rows: decoration only */
+  --lh-page: #e4e9ee; /* the cool grey the floral sheet sits on */
+  --lh-mist: #cfdde8; /* the hero stack's ground (also baked into hero-stack.avif) */
+  --lh-danger: #b3261e; /* errors only, always with an icon and a sentence */
+
+  /* Neutral ramp (slate) */
+  --lh-neutral-100: #f1f2f4;
+  --lh-neutral-200: #e2e6e9;
+  --lh-neutral-300: #c6ccd2;
+  --lh-neutral-400: #9ba6b1;
+  --lh-neutral-500: #708090;
+  --lh-neutral-600: #5e6b79;
+  --lh-neutral-700: #4e5964;
+  --lh-neutral-800: #384048;
+  --lh-neutral-900: #1b1f22;
+
+  /* Accent ramp (sky) */
+  --lh-accent-100: #e9f6fb;
+  --lh-accent-200: #d3edf8;
+  --lh-accent-300: #b0dff2;
+  --lh-accent-400: #9fd8ef;
+  --lh-accent-500: #87ceeb;
+  --lh-accent-600: #24a6db;
+  --lh-accent-700: #1a7499;
+  --lh-accent-800: #12536d;
+  --lh-accent-900: #0b3242;
+
+  /* Shadow: only the dialog and the toast float */
+  --lh-shadow-sm: 0 1px 2px #15283724;
+  --lh-shadow-md: 0 3px 10px #15283729;
+  --lh-shadow-lg: 0 12px 32px #15283738;
+
+  /* Layout */
+  --lh-container-max: 1280px;
+  --gutter: clamp(20px, 4vw, 48px);
+  --section-pad: clamp(48px, 6vw, 80px);
+  --rule: 2px;
+  --rule-thin: 1px;
+  --opacity-disabled: 0.45;
+
+  /* shadcn semantic aliases, mapped onto the brand */
+  --background: var(--lh-bg);
+  --foreground: var(--lh-text);
+  --card: var(--lh-bg);
+  --card-foreground: var(--lh-text);
+  --popover: var(--lh-bg);
+  --popover-foreground: var(--lh-text);
+  --primary: var(--lh-accent);
+  --primary-foreground: var(--lh-text);
+  --secondary: var(--lh-surface);
+  --secondary-foreground: var(--lh-text);
+  --muted: var(--lh-surface);
+  --muted-foreground: var(--lh-neutral-700);
+  --accent: var(--lh-accent);
+  --accent-foreground: var(--lh-text);
+  --destructive: var(--lh-danger);
+  --border: var(--lh-divider);
+  --input: var(--lh-control-border);
+  --ring: var(--lh-text);
+  --radius: 20px;
+  --chart-1: var(--lh-accent);
+  --chart-2: var(--lh-steel);
+  --chart-3: var(--lh-text);
+  --chart-4: var(--lh-accent-700);
+  --chart-5: var(--lh-neutral-500);
+  --sidebar: var(--lh-surface);
+  --sidebar-foreground: var(--lh-text);
+  --sidebar-primary: var(--lh-accent);
+  --sidebar-primary-foreground: var(--lh-text);
+  --sidebar-accent: var(--lh-accent-200);
+  --sidebar-accent-foreground: var(--lh-text);
+  --sidebar-border: var(--lh-divider);
+  --sidebar-ring: var(--lh-text);
+}
+
+/* ---------- Tailwind theme ---------- */
 @theme inline {
+  /* Drop Tailwind's default palette so only system colours exist. */
+  --color-*: initial;
+  --color-white: #ffffff;
+
+  /* Brand colours: bg-bg, bg-surface, text-ink, bg-accent, text-accent-700 … */
+  --color-bg: var(--lh-bg);
+  --color-surface: var(--lh-surface);
+  --color-ink: var(--lh-text);
+  --color-text: var(--lh-text);
+  --color-steel: var(--lh-steel);
+  --color-control-border: var(--lh-control-border);
+  --color-divider: var(--lh-divider);
+  --color-page: var(--lh-page);
+  --color-mist: var(--lh-mist);
+  --color-danger: var(--lh-danger);
+  --color-neutral-100: var(--lh-neutral-100);
+  --color-neutral-200: var(--lh-neutral-200);
+  --color-neutral-300: var(--lh-neutral-300);
+  --color-neutral-400: var(--lh-neutral-400);
+  --color-neutral-500: var(--lh-neutral-500);
+  --color-neutral-600: var(--lh-neutral-600);
+  --color-neutral-700: var(--lh-neutral-700);
+  --color-neutral-800: var(--lh-neutral-800);
+  --color-neutral-900: var(--lh-neutral-900);
+  --color-accent-100: var(--lh-accent-100);
+  --color-accent-200: var(--lh-accent-200);
+  --color-accent-300: var(--lh-accent-300);
+  --color-accent-400: var(--lh-accent-400);
+  --color-accent-500: var(--lh-accent-500);
+  --color-accent-600: var(--lh-accent-600);
+  --color-accent-700: var(--lh-accent-700);
+  --color-accent-800: var(--lh-accent-800);
+  --color-accent-900: var(--lh-accent-900);
+
+  /* shadcn semantic colours */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Fonts: Archivo only (self-hosted via next/font/local in layout.tsx) */
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-heading: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-archivo), system-ui, sans-serif;
+
+  /* Type scale: text-display-xl, text-h2, text-body … (sizes are the fluid maximums) */
+  --text-display-xl: clamp(40px, 5vw, 72px);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.035em;
+  --text-display-xl--font-weight: 600;
+  --text-display-l: clamp(36px, 4.6vw, 64px);
+  --text-display-l--line-height: 1.04;
+  --text-display-l--letter-spacing: -0.03em;
+  --text-display-l--font-weight: 600;
+  --text-h2: clamp(30px, 3.4vw, 44px);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h2--font-weight: 600;
+  --text-numeral: 56px;
+  --text-numeral--line-height: 1;
+  --text-numeral--letter-spacing: -0.03em;
+  --text-numeral--font-weight: 900;
+  --text-modal-title: 28px;
+  --text-modal-title--line-height: 1;
+  --text-modal-title--letter-spacing: -0.02em;
+  --text-modal-title--font-weight: 900;
+  --text-h3: clamp(22px, 2vw, 28px);
+  --text-h3--line-height: 1.12;
+  --text-h3--letter-spacing: -0.02em;
+  --text-h3--font-weight: 600;
+  --text-h4: 20px;
+  --text-h4--line-height: 1.2;
+  --text-h4--font-weight: 700;
+  --text-lead: clamp(17px, 1.6vw, 20px);
+  --text-lead--line-height: 1.45;
+  --text-body-l: 17px;
+  --text-body-l--line-height: 1.5;
+  --text-body: 15px;
+  --text-body--line-height: 1.5;
+  --text-small: 13px;
+  --text-small--line-height: 1.45;
+  --text-eyebrow: 12px;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-eyebrow--font-weight: 700;
+  --text-label: 11px;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.1em;
+  --text-label--font-weight: 700;
+
+  /* Corners: soft. Controls are pills (rounded-full), cards rounded-3xl/4xl. */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+  --radius-4xl: 36px;
+
+  /* Shadows */
+  --shadow-*: initial;
+  --shadow-sm: var(--lh-shadow-sm);
+  --shadow-md: var(--lh-shadow-md);
+  --shadow-lg: var(--lh-shadow-lg);
+
+  /* Sizes: h-control-md, size-icon-md, max-w-page … (spacing stays Tailwind's 4px scale) */
+  --spacing-control-sm: 40px;
+  --spacing-control-md: 44px;
+  --spacing-control-lg: 52px;
+  --spacing-control-xl: 56px;
+  --spacing-icon-sm: 16px;
+  --spacing-icon-md: 20px;
+  --spacing-icon-lg: 24px;
+  --spacing-rule: 2px;
+  --container-page: 1280px;
+
+  /* menu: variant = at and above the 820px menu breakpoint */
+  --breakpoint-menu: 51.25rem; /* 820px, in rem so it sorts with Tailwind's breakpoints */
 }
 
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+/* ---------- Utilities the tokens can't carry ---------- */
+
+/* Small outlined pill tag: the kicker above a heading ("Prices", "FAQ"). */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 5px 12px;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: inherit;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* Form labels and table heads. 11px is the floor: never for sentences. */
+@utility label-caps {
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Page container: 1280px centred, fluid side gutter. */
+@utility page-container {
+  width: 100%;
+  max-width: calc(var(--lh-container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Section rhythm: 2px navy rule on top, fluid vertical padding. */
+@utility section-rule {
+  border-top: var(--rule) solid var(--lh-text);
+  padding-block: var(--section-pad);
+}
+
+/* Navy field: Floral White text, Sky accents, Sky focus ring. */
+@utility on-ink {
+  background-color: var(--lh-text);
+  color: var(--lh-bg);
+  --ring: var(--lh-accent);
+}
+
+/* Sky Blue field: navy text at every size. Never put the logo tile here. */
+@utility on-accent {
+  background-color: var(--lh-accent);
+  color: var(--lh-text);
+}
+
+/* Floral sheet inset on the cool grey page, like a card holding the whole site. */
+@utility sheet {
+  background-color: var(--lh-bg);
+  border-radius: clamp(20px, 3vw, 36px);
+}
+
+/*
+ * Fabric fills: what a photo slot shows until its photograph exists, and the
+ * decoration on round swatches. Pure CSS, no requests. Dark ones (denim,
+ * gingham-navy, dots, twill) carry white text; light ones carry navy.
+ */
+@utility fabric-towel {
+  background-color: var(--lh-bg);
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 22px, var(--lh-accent) 22px 40px, transparent 40px 44px, var(--lh-steel) 44px 48px, transparent 48px 70px);
+}
+@utility fabric-gingham {
+  background-color: var(--lh-bg);
+  background-image:
+    repeating-linear-gradient(0deg, #87ceeb80 0 14px, transparent 14px 28px),
+    repeating-linear-gradient(90deg, #87ceeb80 0 14px, transparent 14px 28px);
+}
+@utility fabric-gingham-navy {
+  background-color: var(--lh-accent-800);
+  background-image:
+    repeating-linear-gradient(0deg, #15283799 0 16px, transparent 16px 32px),
+    repeating-linear-gradient(90deg, #15283799 0 16px, transparent 16px 32px);
+}
+@utility fabric-denim {
+  background-color: #2b5172;
+  background-image:
+    repeating-linear-gradient(45deg, #ffffff14 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(-45deg, #15283740 0 1px, transparent 1px 7px),
+    radial-gradient(120% 90% at 30% 10%, #4682b4 0%, transparent 60%);
+}
+@utility fabric-dots {
+  background-color: var(--lh-steel);
+  background-image: radial-gradient(circle, #fffaf0cc 0 3px, transparent 3.5px);
+  background-size: 22px 22px;
+}
+@utility fabric-twill {
+  background-color: var(--lh-neutral-700);
+  background-image:
+    repeating-linear-gradient(60deg, #ffffff12 0 3px, transparent 3px 8px),
+    radial-gradient(100% 80% at 80% 0%, #708090 0%, transparent 65%);
+}
+@utility fabric-linen {
+  background-color: #f3ede1;
+  background-image:
+    repeating-linear-gradient(0deg, #15283710 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, #15283710 0 1px, transparent 1px 3px);
+}
+@utility fabric-sky {
+  background-color: var(--lh-accent-300);
+  background-image:
+    radial-gradient(90% 70% at 20% 0%, #fffaf0aa 0%, transparent 60%),
+    repeating-linear-gradient(-30deg, #ffffff30 0 2px, transparent 2px 9px);
+}
+
+/*
+ * Inverted-corner notch: a sheet-coloured tab cut into a card's bottom-left
+ * corner, with concave corners above and to its right. Put it inside a
+ * `relative` card; its content sits in the tab.
+ */
+@utility notch-bl {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: var(--lh-bg);
+  border-top-right-radius: 24px;
+  padding: 10px 12px 0 0;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle at 100% 0, transparent 23.5px, var(--lh-bg) 24px);
+    pointer-events: none;
+  }
+  &::before {
+    left: 0;
+    bottom: 100%;
+  }
+  &::after {
+    left: 100%;
+    bottom: 0;
+  }
+}
+
+/* Slow drift for the round swatches around the statement. */
+@utility drift {
+  animation: lh-drift 7s ease-in-out infinite alternate;
+}
+
+/*
+ * Step cards: a row of tall cards; the first is wide until another is hovered
+ * or focused, then that one widens. Below 820px they scroll sideways instead.
+ */
+@utility step-cards {
+  display: flex;
+  gap: 10px;
+  & > * {
+    flex: 1 1 0;
+    min-width: 0;
+    transition: flex-grow 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  & > *:first-child {
+    flex-grow: 1.7;
+  }
+  &:has(> *:hover, > *:focus-within) > * {
+    flex-grow: 1;
+  }
+  & > *:hover,
+  & > *:focus-within {
+    flex-grow: 1.7 !important;
+  }
+  @media (width < 51.25rem) {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
+    & > *,
+    & > *:first-child {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+    }
+  }
+}
+
+/* ---------- Base ---------- */
+@keyframes lh-drift {
+  from {
+    transform: translate3d(0, -8px, 0) rotate(-3deg);
+  }
+  to {
+    transform: translate3d(0, 10px, 0) rotate(3deg);
+  }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    @apply border-border;
   }
   html {
     @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground text-body;
+  }
+  h1,
+  h2,
+  .text-display-xl,
+  .text-display-l,
+  .text-h2 {
+    text-wrap: balance;
+  }
+  a {
+    color: var(--lh-accent-700);
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--lh-accent-800);
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--lh-accent) 30%, transparent);
+  }
+
+  /* One focus style everywhere: 2px navy ring, 2px offset. On navy fields it turns Sky. */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: var(--rule) solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

@@ -18,7 +18,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Design system
+
+Styling follows the **Laundry Hub** design system (Coastal Breeze palette, Archivo, square corners, 2px rules). It lives as a claude.ai Design System artifact; this repo mirrors it:
+
+- `src/app/globals.css`: every token. Brand values are `--lh-*` CSS variables, exposed to Tailwind as `bg-bg`, `bg-surface`, `text-ink`, `bg-accent`, `text-accent-700`, `border-control-border`, `text-danger` and so on. The type scale is `text-display-xl` … `text-label`, sizes are `h-control-md`, `size-icon-md`, and there are utilities `eyebrow`, `label-caps`, `page-container`, `section-rule`, `on-ink`, `on-accent` and `photo-bw`. Tailwind's default palette is switched off, and the shadcn variables map onto the brand.
+- `src/app/fonts/`: Archivo 400/600/700/800/900 woff2, self-hosted with `next/font/local` (SIL OFL).
+- `public/brand/`: logo SVGs and the 1024px app icon. `src/app/icon.svg` and `apple-icon.png` are the favicons. Use `<Logo />` from `src/components/brand/logo.tsx` and never live text.
+- `src/components/ui/`: shadcn components restyled to the system, plus `field.tsx` (hint and error).
+- `src/lib/utils.ts`: `cn`, configured with the custom type and size names so classes merge correctly.
+
+## Landing page
+
+Built to the design system's `flow.md`: a static export (`output: "export"`, written to `out/`) for Firebase Hosting.
+
+- `src/app/page.tsx` puts the sections together, and they are server components (`src/components/landing/`). The client parts are the booking dialog (`src/components/booking/`), the mobile menu, the 3D hero and the GSAP scroll motion.
+- **3D hero** (`src/components/hero/`): the scene code is in `stack-scene.ts`, plain three.js with no framework. `public/hero/hero-stack.avif` is a still of its final frame and is what the browser paints first, so it is the LCP image. The live canvas mounts after idle and fades in over it, except under reduced motion, Save-Data or on low-end devices. After you change the scene, run `npm run render:hero` to regenerate the still (needs firefox, avifenc and python3).
+- **Booking**: `submitBooking()` in `src/lib/booking.ts` posts to `NEXT_PUBLIC_BOOKING_ENDPOINT` (the Cloud Function). While that variable isn't set, the dialog runs as a prototype, sends nothing and says so. `/#book` opens the dialog directly.
+- Services and prices are in `src/lib/services.ts`. Bookable hours (`SLOT_HOURS`) are a placeholder until opening hours are decided.
 
 ## Learn More
 
